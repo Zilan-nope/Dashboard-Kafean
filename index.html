@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kafe Senja: Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef1ec;--card:#fbfcfa;--tx:#14201b;--mu:#62706a;--ln:#dbe2dc;--pr:#1e6b52;--prt:#d9ebe2;--ok:#1e8a4f;--bad:#c0392b;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#101814;--card:#17211c;--tx:#e8efe9;--mu:#92a39a;--ln:#27352e;--pr:#5fcf9e;--prt:#1d3b2e;--ok:#5fcf9e;--bad:#ff8a7a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#101814;--card:#17211c;--tx:#e8efe9;--mu:#92a39a;--ln:#27352e;--pr:#5fcf9e;--prt:#1d3b2e;--ok:#5fcf9e;--bad:#ff8a7a;color-scheme:dark}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.5 "Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+[hidden]{display:none!important}
+h1{font-size:24px;font-weight:800;margin:0 0 14px}h2{font-size:15px;font-weight:600;margin:0 0 10px}
+small,.mu{color:var(--mu);font-weight:400;font-size:12px}
+#app{display:grid;grid-template-columns:190px minmax(0,1fr)}
+nav{padding:18px 10px;border-right:1px solid var(--ln);height:100%}
+.br{font-weight:800;font-size:18px;padding:0 12px 16px}
+nav button{display:block;width:100%;text-align:left;background:none;border:0;color:var(--tx);padding:11px 12px;border-radius:10px;font:inherit;cursor:pointer}
+nav button.on{background:var(--prt);color:var(--pr);font-weight:600}
+main{padding:22px;max-width:980px;width:100%}
+.card{background:var(--card);border:1px solid var(--ln);border-radius:14px;padding:16px;margin-bottom:14px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:14px}
+.kpis .card{margin:0}.kpis b{display:block;font-size:20px}
+.kpis .hero{grid-column:span 2;background:var(--pr);border-color:var(--pr);color:var(--bg)}.hero .mu{color:inherit;opacity:.8}.hero b{font-size:38px;line-height:1.15;font-weight:800}
+.ok{color:var(--ok)}.bad{color:var(--bad)}.hero .ok{color:inherit}
+.g2{display:grid;grid-template-columns:3fr 2fr;gap:14px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--ln)}.row:last-child{border:0}
+.seg{display:inline-flex;border:1px solid var(--ln);border-radius:10px;margin-bottom:12px;overflow:hidden}
+button{font:inherit;cursor:pointer}.seg button{background:none;border:0;color:var(--tx);padding:7px 16px}
+.pb,.seg button.on{background:var(--pr);color:var(--bg);border:0;border-radius:9px;padding:7px 14px;font-weight:600}.seg button.on{border-radius:0}
+.qs{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}
+.q{background:var(--bg);border:1px solid var(--ln);border-radius:12px;padding:10px;text-align:left;color:var(--tx)}.q:active{background:var(--prt)}.q span{display:block;color:var(--mu);font-size:12px}
+.tag{border:1px solid var(--ln);padding:2px 9px;border-radius:20px;font-size:12px;white-space:nowrap}
+.scroll{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:430px}th{text-align:left;color:var(--mu);font-size:12px;font-weight:400}td{padding:4px 4px 4px 0}
+input,select{width:100%;background:var(--bg);color:var(--tx);border:1px solid var(--ln);border-radius:8px;padding:7px;font:inherit}input[type=checkbox]{width:20px;height:20px}
+.x{background:none;border:0;color:var(--bad);font-size:16px}
+.add{display:flex;gap:8px;margin-top:12px}
+.qrb{background:#fff;padding:12px;border-radius:12px;display:inline-block;margin:12px 0}.qrb svg{display:block}
+.url{word-break:break-all}ul{margin:0;padding-left:18px}li{margin:6px 0}
+#toast{position:fixed;left:50%;bottom:calc(90px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--tx);color:var(--bg);padding:9px 16px;border-radius:20px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:9}#toast.s{opacity:1}
+#cust{max-width:520px;margin:0 auto;padding:22px}.dim{opacity:.5}
+@media(max-width:800px){#app{display:block}nav{position:fixed;left:0;right:0;bottom:0;z-index:5;display:flex;height:auto;border:0;border-top:1px solid var(--ln);background:var(--card);padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px))}nav button{text-align:center;padding:10px 4px;font-size:13px}.br{display:none}main{padding:16px 16px 90px}.g2{grid-template-columns:1fr}.kpis .hero{grid-column:span 2}}
+</style></head><body>
+<div id="app"><nav><div class="br">☕ Kafe Senja</div><button data-t="dash">📊 Dashboard</button><button data-t="menu">📋 Menu &amp; QR</button><button data-t="att">🕘 Absensi</button></nav><main id="main"></main></div>
+<div id="cust" hidden></div><div id="toast"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<script>
+const $=s=>document.querySelector(s),KEY='kafe_senja_v1';
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const rp=n=>'Rp '+Math.round(n).toLocaleString('id-ID');
+const DN=['Min','Sen','Sel','Rab','Kam','Jum','Sab'],dl=d=>d?DN[new Date(Date.now()-d*864e5).getDay()]:'Hari ini';
+const hm=()=>{const n=new Date();return String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0')};
+const mins=t=>+t.slice(0,2)*60+ +t.slice(3);
+let S,P=0,tab='dash',TB=5,pv=false,tt;
+function seed(){
+ const menu=[[1,'Kopi Susu','Kopi',22000,8000,40],[2,'Americano','Kopi',18000,5000,35],[3,'Latte','Kopi',26000,9500,30],[4,'Matcha Latte','Non-kopi',28000,11000,18],[5,'Es Teh Lemon','Non-kopi',14000,4000,50],[6,'Croissant','Makanan',24000,10000,12],[7,'Roti Bakar','Makanan',20000,7500,9],[8,'Nasi Ayam Sambal','Makanan',32000,13000,8]].map(([id,name,cat,price,cost,stock])=>({id,name,cat,price,cost,stock,on:true}));
+ const sales=[];for(let d=0;d<7;d++)menu.forEach(m=>{const q=((m.id*5+d*3)%7)+(d?2:0);if(q)sales.push({d,id:m.id,q})});
+ return{menu,sales,nid:9,att:{1:{in:'07:55'},2:{in:'08:14'}},staff:[{id:1,name:'Rina',role:'Barista',shift:'08:00'},{id:2,name:'Dimas',role:'Kasir',shift:'08:00'},{id:3,name:'Sari',role:'Barista',shift:'14:00'},{id:4,name:'Bagas',role:'Dapur',shift:'10:00'}]}
+}
+try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}
+if(!S||!S.menu)S=seed();
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const M=id=>S.menu.find(m=>m.id===id);
+const isLate=s=>{const a=S.att[s.id];return a&&a.in&&mins(a.in)>mins(s.shift)+10};
+const toast=m=>{const t=$('#toast');t.textContent=m;t.classList.add('s');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('s'),1800)};
+const k=(a,b,c='',h='')=>`<div class="card ${h}"><span class="mu">${a}</span><b class="${c}">${b}</b></div>`;
+function stats(p){let rev=0,cost=0,qty=0;const day=Array(7).fill(0),by={};
+ S.sales.forEach(s=>{const m=M(s.id);if(!m)return;day[s.d]+=m.price*s.q;if(p||s.d===0){rev+=m.price*s.q;cost+=m.cost*s.q;qty+=s.q;by[m.id]=(by[m.id]||0)+s.q}});
+ return{rev,profit:rev-cost,qty,day,top:Object.entries(by).sort((a,b)=>b[1]-a[1]).slice(0,5)}}
+function chart(day){const mx=Math.max(...day,1);
+ return'<svg viewBox="0 0 320 140" role="img" aria-label="Omzet 7 hari terakhir" style="width:100%">'+[6,5,4,3,2,1,0].map((d,i)=>{const h=day[d]/mx*90,x=8+i*45;
+ return`<rect x="${x}" y="${112-h}" width="32" height="${h}" rx="6" style="fill:${d?'var(--prt)':'var(--pr)'}"/><text x="${x+16}" y="${106-h}" text-anchor="middle" font-size="9" style="fill:var(--tx)">${Math.round(day[d]/1000)}k</text><text x="${x+16}" y="130" text-anchor="middle" font-size="9" style="fill:var(--mu)">${dl(d)}</text>`}).join('')+'</svg>'}
+function aiText(){const w=stats(1),L=[],t=w.top[0];
+ if(t)L.push(`Terlaris 7 hari: <b>${esc(M(+t[0]).name)}</b> (${t[1]} terjual). Jaga stoknya tetap aman.`);
+ const bm=[...S.menu].sort((a,b)=>(b.price-b.cost)/b.price-(a.price-a.cost)/a.price)[0];
+ if(bm)L.push(`Margin terbaik: <b>${esc(bm.name)}</b> (${Math.round((bm.price-bm.cost)/bm.price*100)}% dari harga). Cocok untuk paket promo.`);
+ const low=S.menu.filter(m=>m.stock<=10);if(low.length)L.push(`Segera restock: ${low.map(m=>esc(m.name)).join(', ')}.`);
+ const late=S.staff.filter(isLate).map(s=>esc(s.name));if(late.length)L.push(`Terlambat hari ini: ${late.join(', ')}. Tinjau jadwal shift.`);
+ return'<ul>'+L.map(x=>'<li>'+x+'</li>').join('')+'</ul>'}
+function dashV(){const st=stats(P),low=S.menu.filter(m=>m.stock<=10);
+ return`<h1>Dashboard</h1><div class="seg"><button data-p="0" class="${P?'':'on'}">Hari ini</button><button data-p="1" class="${P?'on':''}">7 hari</button></div>
+<div class="kpis">${k('Untung '+(P?'7 hari':'hari ini'),rp(st.profit),'','hero')}${k('Omzet',rp(st.rev))}${k('Item terjual',st.qty)}${k('Stok menipis',low.length,low.length?'bad':'')}</div>
+<div class="g2"><div class="card"><h2>Omzet 7 hari</h2>${chart(st.day)}</div><div class="card"><h2>Menu terlaris</h2>${st.top.map(([id,q],i)=>`<div class="row"><span>${i+1}. ${esc(M(+id).name)}</span><b>${q}</b></div>`).join('')||'<p class="mu">Belum ada penjualan.</p>'}</div></div>
+<div class="card"><h2>Kasir cepat <small>ketuk menu untuk mencatat 1 penjualan</small></h2><div class="qs">${S.menu.filter(m=>m.on).map(m=>`<button class="q" data-sell="${m.id}"><b>${esc(m.name)}</b><span>${rp(m.price)}, sisa ${m.stock}</span></button>`).join('')}</div></div>
+<div class="g2"><div class="card"><h2>Ringkasan AI <small>simulasi aturan lokal</small></h2>${aiText()}</div><div class="card"><h2>Perlu restock</h2>${low.map(m=>`<div class="row"><span>${esc(m.name)} <small>sisa ${m.stock}</small></span><button class="pb" data-rs="${m.id}">+10</button></div>`).join('')||'<p class="mu">Semua stok aman.</p>'}</div></div>`}
+function qr(u){try{const q=qrcode(0,'M');q.addData(u);q.make();return q.createSvgTag(5,2)}catch(e){return'<p class="mu">QR gagal dimuat. Periksa koneksi internet.</p>'}}
+function menuV(){const u=location.href.split('#')[0]+'#menu-'+TB;
+ return`<h1>Menu &amp; QR</h1><div class="g2"><div class="card"><h2>Edit menu</h2><div class="scroll"><table><tr><th>Menu</th><th>Harga</th><th>Stok</th><th>Ada</th><th></th></tr>${S.menu.map(m=>`<tr><td><input data-f="name" data-id="${m.id}" value="${esc(m.name)}" aria-label="Nama"></td><td><input type="number" min="0" step="500" data-f="price" data-id="${m.id}" value="${m.price}" aria-label="Harga"></td><td><input type="number" min="0" data-f="stock" data-id="${m.id}" value="${m.stock}" aria-label="Stok"></td><td><input type="checkbox" data-f="on" data-id="${m.id}" ${m.on?'checked':''} aria-label="Tersedia"></td><td><button class="x" data-del="${m.id}" aria-label="Hapus">✕</button></td></tr>`).join('')}</table></div>
+<div class="add"><input id="nn" placeholder="Nama menu baru"><input id="np" type="number" placeholder="Harga"><button class="pb" id="add">Tambah</button></div></div>
+<div class="card"><h2>QR menu untuk pelanggan</h2><select id="tb" aria-label="Nomor meja">${Array.from({length:12},(_,i)=>`<option value="${i+1}" ${i+1==TB?'selected':''}>Meja ${i+1}</option>`).join('')}</select><div class="qrb">${qr(u)}</div><p class="mu url">${esc(u)}</p><button class="pb" id="pv">Lihat tampilan pelanggan</button><p class="mu">Prototipe ini menyimpan data di browser ini saja. Di aplikasi asli, menu disimpan di Firestore sehingga pelanggan selalu melihat versi terbaru.</p></div></div>`}
+function attV(){const n=S.staff.length,h=S.staff.filter(s=>(S.att[s.id]||{}).in).length,l=S.staff.filter(isLate).length;
+ return`<h1>Absensi karyawan</h1><div class="kpis">${k('Hadir',h+' dari '+n)}${k('Terlambat',l,l?'bad':'')}${k('Belum masuk',n-h)}</div><div class="card">${S.staff.map(s=>{const a=S.att[s.id]||{},late=isLate(s);
+ return`<div class="row"><div><b>${esc(s.name)}</b><br><span class="mu">${s.role}, shift ${s.shift}</span></div><div style="display:flex;gap:8px;align-items:center">${a.in?`<span class="tag ${late?'bad':'ok'}">${late?'Terlambat':'Tepat waktu'} ${a.in}${a.out?' sampai '+a.out:''}</span>`:'<span class="tag">Belum masuk</span>'}${!a.in?`<button class="pb" data-att="in:${s.id}">Masuk</button>`:!a.out?`<button class="pb" data-att="out:${s.id}">Pulang</button>`:''}</div></div>`}).join('')}</div>`}
+function cust(t){const cs=[...new Set(S.menu.filter(m=>m.on).map(m=>m.cat))];
+ return`${pv?'<button id="back" class="pb">Kembali ke dashboard</button>':''}<h1 style="margin-top:14px">☕ Kafe Senja</h1><p class="mu">${t?'Meja '+esc(t)+', ':''}menu hari ini</p>`+cs.map(c=>`<h2 style="margin-top:18px">${esc(c)}</h2>`+S.menu.filter(m=>m.on&&m.cat===c).map(m=>`<div class="row ${m.stock<=0?'dim':''}"><span>${esc(m.name)}</span><b>${m.stock<=0?'Habis':rp(m.price)}</b></div>`).join('')).join('')}
+function render(){const h=location.hash,c=/^#menu/.test(h);$('#app').hidden=c;$('#cust').hidden=!c;
+ if(c){$('#cust').innerHTML=cust(h.slice(6).replace(/^-/,''));return}
+ $('#main').innerHTML={dash:dashV,menu:menuV,att:attV}[tab]();
+ document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===tab))}
+function sell(id){const m=M(id);if(m.stock<=0){toast(m.name+' sudah habis');return}
+ m.stock--;const e=S.sales.find(s=>s.d===0&&s.id===id);e?e.q++:S.sales.push({d:0,id,q:1});save();render();toast('Tercatat: '+m.name)}
+function add(){const n=$('#nn').value.trim(),p=+$('#np').value;if(!n||!p){toast('Isi nama dan harga dulu');return}
+ S.menu.push({id:S.nid++,name:n,cat:'Lainnya',price:p,cost:Math.round(p*.4),stock:20,on:true});save();render()}
+document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const d=b.dataset;
+ if(d.t){tab=d.t;render()}else if(d.p!==undefined){P=+d.p;render()}else if(d.sell)sell(+d.sell)
+ else if(d.rs){M(+d.rs).stock+=10;save();render()}
+ else if(d.del){S.menu=S.menu.filter(m=>m.id!==+d.del);save();render()}
+ else if(d.att){const[w,id]=d.att.split(':');const a=S.att[id]=S.att[id]||{};a[w]=hm();save();render()}
+ else if(b.id==='add')add();else if(b.id==='pv'){pv=true;location.hash='menu-'+TB}
+ else if(b.id==='back'){pv=false;location.hash=''}});
+document.addEventListener('input',e=>{const t=e.target,f=t.dataset.f;if(!f)return;const m=M(+t.dataset.id);if(!m)return;
+ m[f]=f==='on'?t.checked:f==='name'?t.value:Math.max(0,+t.value||0);save()});
+document.addEventListener('change',e=>{if(e.target.id==='tb'){TB=+e.target.value;render()}});
+addEventListener('hashchange',render);render();
+</script></body></html>
